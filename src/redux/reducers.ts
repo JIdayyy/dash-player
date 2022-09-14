@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 
-import counter from "@redux/slices/counter";
+import player from "@redux/slices/player";
 
 import { store } from "./store";
 
-const rootReducer = combineReducers({ counter });
+const rootReducer = combineReducers({ player });
 
 export type RootState = ReturnType<typeof store.getState>;
 

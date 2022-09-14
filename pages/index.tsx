@@ -1,18 +1,14 @@
-import React from "react";
-import { Spacer, Flex } from "@chakra-ui/react";
+import React, { ReactElement } from "react";
+import MainLayout from "@components/Layout/MainLayout";
+import type { NextPageWithLayout } from "./_app";
+import { Text } from "@chakra-ui/react";
 
-import { Header, Main, Cards, Footer } from "@components";
+const Home: NextPageWithLayout = () => {
+    return <Text>Home</Text>;
+};
 
-const Home: React.FC = () => {
-    return (
-        <Flex direction="column" minH="100vh">
-            <Header />
-            <Main />
-            <Cards />
-            <Spacer />
-            <Footer />
-        </Flex>
-    );
+Home.getLayout = function getLayout(page: ReactElement) {
+    return <MainLayout>{page}</MainLayout>;
 };
 
 export default Home;

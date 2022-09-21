@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import store from "@redux/store";
 import getAllSongs from "@redux/thunk/songs";
 import { NextPage } from "next";
+import Player from "@components/Player";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -27,6 +28,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     const queryClient = new QueryClient();
 
     store.dispatch(getAllSongs());
+
     const getLayout = Component.getLayout || ((page) => page);
 
     return (

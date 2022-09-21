@@ -4,24 +4,16 @@ import {
     Flex,
     Icon,
     Box,
-    Collapse,
     Drawer,
     DrawerOverlay,
     DrawerContent,
     IconButton,
-    Avatar,
     Text,
-    Switch,
     useColorMode,
 } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
-import { Logo } from "..";
-import {
-    MdHome,
-    MdKeyboardArrowRight,
-    MdOutlineCloudUpload,
-} from "react-icons/md";
-import { HiCode } from "react-icons/hi";
+import { MdHome, MdOutlineCloudUpload } from "react-icons/md";
+import {} from "react-icons/hi";
 import { BsGearFill } from "react-icons/bs";
 import { FiMenu } from "react-icons/fi";
 import Player from "@components/Player";
@@ -33,9 +25,8 @@ interface IProps {
 
 export default function MainLayout({ children }: IProps): JSX.Element {
     const sidebar = useDisclosure();
-    const integrations = useDisclosure();
+    // const integrations = useDisclosure();
     const color = useColorModeValue("gray.600", "gray.300");
-    const { toggleColorMode } = useColorMode();
 
     const NavItem = ({ icon, children, href }) => {
         const router = useRouter();
@@ -127,6 +118,10 @@ export default function MainLayout({ children }: IProps): JSX.Element {
 
                 <NavItem href="upload" icon={MdOutlineCloudUpload}>
                     Upload
+                </NavItem>
+
+                <NavItem href="manage" icon={MdOutlineCloudUpload}>
+                    Manage
                 </NavItem>
 
                 {/* <NavItem icon={HiCode} onClick={integrations.onToggle}>
@@ -230,10 +225,20 @@ export default function MainLayout({ children }: IProps): JSX.Element {
                     </InputGroup> */}
                 </Flex>
 
-                <Flex w="full" flexGrow={1} as="main" p="4">
+                <Flex
+                    top="0"
+                    left="0"
+                    zIndex="sticky"
+                    h="full"
+                    overflowX="hidden"
+                    overflowY="scroll"
+                    w="full"
+                    flexGrow={1}
+                    as="main"
+                    p="4"
+                >
                     {children}
                 </Flex>
-                <Player />
             </Box>
         </Box>
     );

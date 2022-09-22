@@ -8,7 +8,6 @@ COPY package*.json ./
 
 RUN npm ci 
 
-RUN apt-get install python -y
 
 COPY . /opt/app
 

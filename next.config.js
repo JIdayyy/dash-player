@@ -1,7 +1,10 @@
-const withPlugins = require("next-compose-plugins");
-
-module.exports = withPlugins([], {
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
     images: {
         domains: ["minio-dc-s3.digitalcopilote.re"],
     },
-});
+};
+
+module.exports = nextConfig;

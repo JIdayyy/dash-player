@@ -46,8 +46,6 @@ const usePlayer = (ref?: React.RefObject<HTMLAudioElement>) => {
     };
 
     const handleSelectSong = (id: string) => {
-        console.log("REF", ref);
-
         if (ref) {
             dispatch(setSongDuration(ref.current?.duration));
         }
@@ -90,7 +88,7 @@ const usePlayer = (ref?: React.RefObject<HTMLAudioElement>) => {
             play();
         }
     }, [isPlaying]);
-    console.log(position);
+
     return {
         isPlaying,
         dispatchSetIsOnPause,

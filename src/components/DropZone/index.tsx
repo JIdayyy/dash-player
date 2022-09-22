@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button, Flex, Icon, Progress, useToast } from "@chakra-ui/react";
-import { useAppDispatch } from "@redux/store";
-import getAllSongs from "@redux/thunk/songs";
 import axios, { CancelTokenSource } from "axios";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -9,7 +8,6 @@ import axiosInstance from "src/utils/axiosInstance";
 
 function MyDropzone(): JSX.Element {
     const [progress, setProgress] = useState(0);
-    const dispatch = useAppDispatch();
     const [canceler, setCanceler] = useState<{
         source: CancelTokenSource | null;
     }>({
@@ -17,7 +15,7 @@ function MyDropzone(): JSX.Element {
     });
     const toast = useToast();
 
-    const onDrop = useCallback(async (acceptedFiles) => {
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
         const source = axios.CancelToken.source();
         const formData = new FormData();
         formData.append("file", acceptedFiles[0]);
@@ -42,18 +40,18 @@ function MyDropzone(): JSX.Element {
                     status: "success",
                 });
                 setProgress(0);
-                dispatch(getAllSongs());
             }
         } catch (thrown) {
-            if (axios.isCancel(thrown)) {
-                console.log("Request canceled", thrown.message);
+            if (axios.isCancel(thrown) && axios.isAxiosError(thrown)) {
                 setProgress(0);
-            } else {
-                console.log(thrown.response.data.message);
+            } else if (
+                axios.isAxiosError(thrown) &&
+                typeof thrown !== "undefined"
+            ) {
                 setProgress(0);
                 toast({
                     title: "Error",
-                    description: thrown.response.data.message,
+                    description: thrown.response!.data.message,
                     status: "warning",
                 });
             }

@@ -1,24 +1,14 @@
-import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
-    Icon,
-} from "@chakra-ui/react";
-import EditSongForm from "@components/forms/EditSongForm";
-import SimpleModal from "@components/Modals/SimpleModal";
+import { Table, Thead, Tbody, Tr, Th, TableContainer } from "@chakra-ui/react";
 import { useAppSelector } from "@redux/store";
-import { FaRegEdit } from "react-icons/fa";
+
+import TableItem from "./TableItem";
 
 export default function SongTable(): JSX.Element {
     const { songs } = useAppSelector((state) => state.rootReducer.player);
 
     return (
         <TableContainer w="full" h="full">
-            <Table variant="simple">
+            <Table size="sm" variant="striped">
                 <Thead>
                     <Tr>
                         <Th>ID</Th>
@@ -26,27 +16,10 @@ export default function SongTable(): JSX.Element {
                         <Th></Th>
                     </Tr>
                 </Thead>
-                <Tbody>
+
+                <Tbody w="full">
                     {songs.map((song) => (
-                        <Tr
-                            rounded="xl"
-                            overflow="hidden"
-                            cursor="pointer"
-                            _hover={{
-                                backgroundColor: "#3e4756",
-                            }}
-                        >
-                            <Td>{song.id}</Td>
-                            <Td>{song.title}</Td>
-                            <Td>
-                                <SimpleModal
-                                    button={<Icon as={FaRegEdit} />}
-                                    title="Edit song"
-                                >
-                                    <EditSongForm song={song} />
-                                </SimpleModal>
-                            </Td>
-                        </Tr>
+                        <TableItem key={song.id} song={song} />
                     ))}
                 </Tbody>
             </Table>

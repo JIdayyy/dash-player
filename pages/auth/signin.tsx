@@ -10,31 +10,22 @@ import {
     useBreakpointValue,
     IconProps,
     Icon,
-    useToast,
 } from "@chakra-ui/react";
 import AuthLayout from "@components/Layout/AuthLayout";
 import { useAppDispatch } from "@redux/store";
-import { signUpThunk } from "@redux/thunk/auth";
+import { signInThunk } from "@redux/thunk/auth";
 import { ReactNode } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
-export default function SignUp(): JSX.Element {
+export default function SignIn(): JSX.Element {
     const dispatch = useAppDispatch();
     const { handleSubmit, register } = useForm();
-    const toast = useToast();
 
     const onSubmit = (data: FieldValues) => {
-        if (data.password !== data.passwordConfirmation) {
-            return toast({
-                title: "Error",
-                description: "Passwords do not match",
-            });
-        }
         dispatch(
-            signUpThunk({
+            signInThunk({
                 email: data.email,
                 password: data.password,
-                username: data.username,
             }),
         );
     };
@@ -75,7 +66,7 @@ export default function SignUp(): JSX.Element {
                             lineHeight={1.1}
                             fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}
                         >
-                            Sign up here
+                            Sign in here
                             <Text
                                 as={"span"}
                                 bgGradient="linear(to-r, red.400,pink.400)"
@@ -84,26 +75,9 @@ export default function SignUp(): JSX.Element {
                                 !
                             </Text>
                         </Heading>
-                        <Text
-                            color={"gray.500"}
-                            fontSize={{ base: "sm", sm: "md" }}
-                        >
-                            if you don't have your secret key yet, please
-                            contact an administrator
-                        </Text>
                     </Stack>
                     <Box as={"form"} mt={10}>
                         <Stack spacing={4}>
-                            <Input
-                                {...register("username")}
-                                placeholder="Username"
-                                bg={"gray.100"}
-                                border={0}
-                                color={"gray.500"}
-                                _placeholder={{
-                                    color: "gray.500",
-                                }}
-                            />
                             <Input
                                 placeholder="john@doe.io"
                                 bg={"gray.100"}
@@ -124,16 +98,6 @@ export default function SignUp(): JSX.Element {
                                     color: "gray.500",
                                 }}
                             />
-                            <Input
-                                placeholder="Password confirmation"
-                                bg={"gray.100"}
-                                {...register("passwordConfirmation")}
-                                border={0}
-                                color={"gray.500"}
-                                _placeholder={{
-                                    color: "gray.500",
-                                }}
-                            />
                         </Stack>
                         <Button
                             fontFamily={"heading"}
@@ -147,7 +111,7 @@ export default function SignUp(): JSX.Element {
                                 boxShadow: "xl",
                             }}
                         >
-                            Sign Up
+                            Sign In
                         </Button>
                     </Box>
                     form
@@ -185,4 +149,4 @@ export const Blur = (props: IconProps): JSX.Element => {
     );
 };
 
-SignUp.getLayout = (page: ReactNode) => <AuthLayout>{page}</AuthLayout>;
+SignIn.getLayout = (page: ReactNode) => <AuthLayout>{page}</AuthLayout>;

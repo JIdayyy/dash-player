@@ -1,16 +1,11 @@
-import { Flex } from "@chakra-ui/react";
 import MainLayout from "@components/Layout/MainLayout";
 import SongTable from "@components/Tables/song";
-import { NextPageWithLayout } from "./_app";
+import { ReactElement, ReactNode } from "react";
 
-export default function Manage(): JSX.Element {
-    return (
-        <Flex w="full" h="full">
-            <SongTable />
-        </Flex>
-    );
-}
+const Manage = (): ReactNode => {
+    return <SongTable />;
+};
 
-Manage.getLayout = (page: NextPageWithLayout) => {
+Manage.getLayout = function getLayout(page: ReactElement) {
     return <MainLayout>{page}</MainLayout>;
 };

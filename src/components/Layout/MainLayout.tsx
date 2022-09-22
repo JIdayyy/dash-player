@@ -1,23 +1,21 @@
 import {
     useDisclosure,
-    useColorModeValue,
     Flex,
-    Icon,
     Box,
     Drawer,
     DrawerOverlay,
     DrawerContent,
     IconButton,
-    Text,
-    useColorMode,
+    Spinner,
+    Center,
 } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
-import { MdHome, MdOutlineCloudUpload } from "react-icons/md";
-import {} from "react-icons/hi";
-import { BsGearFill } from "react-icons/bs";
+import React, { ReactNode, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
-import Player from "@components/Player";
 import { useRouter } from "next/router";
+import socket from "@services/socket";
+import BreadScrumbs from "@components/breadscrumbs";
+import { useAppSelector } from "@redux/store";
+import Sidebar from "./Sidebar";
 
 interface IProps {
     children: ReactNode;
@@ -25,145 +23,31 @@ interface IProps {
 
 export default function MainLayout({ children }: IProps): JSX.Element {
     const sidebar = useDisclosure();
-    // const integrations = useDisclosure();
-    const color = useColorModeValue("gray.600", "gray.300");
+    const { isAuth } = useAppSelector((state) => state.rootReducer.user);
+    const router = useRouter();
 
-    const NavItem = ({ icon, children, href }) => {
-        const router = useRouter();
+    useEffect(() => {
+        return () => {
+            socket.off("NEW_SONG");
+        };
+    }, []);
 
-        const handleClick = () => router.push(`/${href}`);
+    useEffect(() => {
+        if (!isAuth) {
+            router.push("/auth/signin");
+        }
+    }, [isAuth]);
 
+    if (!isAuth)
         return (
-            <Flex
-                onClick={handleClick}
-                align="center"
-                px="4"
-                pl="4"
-                py="3"
-                cursor="pointer"
-                color="inherit"
-                _dark={{
-                    color: "gray.400",
-                }}
-                _hover={{
-                    bg: "gray.100",
-                    _dark: {
-                        bg: "gray.900",
-                    },
-                    color: "gray.900",
-                }}
-                role="group"
-                fontWeight="semibold"
-                transition=".15s ease"
-            >
-                {icon && (
-                    <Icon
-                        mx="2"
-                        boxSize="4"
-                        _groupHover={{
-                            color: color,
-                        }}
-                        as={icon}
-                    />
-                )}
-                {children}
-            </Flex>
+            <Center w="full" h="full">
+                <Spinner />
+            </Center>
         );
-    };
-
-    const SidebarContent = (props) => (
-        <Box
-            as="nav"
-            pos="fixed"
-            top="0"
-            left="0"
-            zIndex="sticky"
-            h="full"
-            pb="10"
-            overflowX="hidden"
-            overflowY="auto"
-            bg="white"
-            _dark={{
-                bg: "gray.800",
-            }}
-            border
-            color="inherit"
-            borderRightWidth="1px"
-            w="60"
-            {...props}
-        >
-            <Flex px="4" py="5" align="center">
-                <Text
-                    fontSize="2xl"
-                    ml="2"
-                    color="brand.500"
-                    _dark={{
-                        color: "white",
-                    }}
-                    fontWeight="semibold"
-                >
-                    Jidayyy Dashboard
-                </Text>
-            </Flex>
-            <Flex
-                direction="column"
-                as="nav"
-                fontSize="sm"
-                color="gray.600"
-                aria-label="Main Navigation"
-            >
-                <NavItem href="" icon={MdHome}>
-                    Home
-                </NavItem>
-
-                <NavItem href="upload" icon={MdOutlineCloudUpload}>
-                    Upload
-                </NavItem>
-
-                <NavItem href="manage" icon={MdOutlineCloudUpload}>
-                    Manage
-                </NavItem>
-
-                {/* <NavItem icon={HiCode} onClick={integrations.onToggle}>
-                    Integrations
-                    <Icon
-                        as={MdKeyboardArrowRight}
-                        ml="auto"
-                        transform={integrations.isOpen ? "rotate(90deg)" : ""}
-                    />
-                </NavItem> */}
-                {/* <Collapse in={integrations.isOpen}>
-                    <NavItem pl="12" py="2">
-                        Shopify
-                    </NavItem>
-                    <NavItem pl="12" py="2">
-                        Slack
-                    </NavItem>
-                    <NavItem pl="12" py="2">
-                        Zapier
-                    </NavItem>
-                    <NavItem pl="12" py="2">
-                        Upload
-                    </NavItem>
-                </Collapse> */}
-                <NavItem href="/settings" icon={BsGearFill}>
-                    Settings
-                </NavItem>
-            </Flex>
-        </Box>
-    );
 
     return (
-        <Box
-            as="section"
-            bg="gray.50"
-            _dark={{
-                bg: "gray.700",
-            }}
-            minH="100vh"
-            w="full"
-        >
-            <SidebarContent
+        <Box as="section" h="100vh" w="100vw">
+            <Sidebar
                 display={{
                     base: "none",
                     md: "unset",
@@ -176,7 +60,7 @@ export default function MainLayout({ children }: IProps): JSX.Element {
             >
                 <DrawerOverlay />
                 <DrawerContent>
-                    <SidebarContent w="full" borderRight="none" />
+                    <Sidebar w="full" borderRight="none" />
                 </DrawerContent>
             </Drawer>
             <Box
@@ -223,11 +107,10 @@ export default function MainLayout({ children }: IProps): JSX.Element {
                         </InputLeftElement>
                         <Input placeholder="Search for articles..." />
                     </InputGroup> */}
+                    <BreadScrumbs />
                 </Flex>
 
                 <Flex
-                    top="0"
-                    left="0"
                     zIndex="sticky"
                     h="full"
                     overflowX="hidden"

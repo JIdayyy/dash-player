@@ -1,11 +1,11 @@
 import MyDropzone from "@components/DropZone";
 import MainLayout from "@components/Layout/MainLayout";
-import { NextPageWithLayout } from "./_app";
+import { ReactNode } from "react";
 
 export default function Upload(): JSX.Element {
     return <MyDropzone />;
 }
 
-Upload.getLayout = (page: NextPageWithLayout) => {
+Upload.getLayout = (page: ReactNode) => {
     return <MainLayout>{page}</MainLayout>;
 };

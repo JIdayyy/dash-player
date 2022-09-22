@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { ReactElement, ReactNode } from "react";
 import { AppProps } from "next/app";
@@ -12,16 +13,15 @@ import { Provider } from "react-redux";
 import store from "@redux/store";
 import getAllSongs from "@redux/thunk/songs";
 import { NextPage } from "next";
-import Player from "@components/Player";
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     getLayout?: (page: ReactElement) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
     Component: NextPageWithLayout;
     getLayout?: (page: ReactElement) => ReactNode;
-} & AppProps<P>;
+} & AppProps<any>;
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     const apolloClient = initializeApollo();

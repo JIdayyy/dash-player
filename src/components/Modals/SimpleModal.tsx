@@ -7,7 +7,6 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,
 } from "@chakra-ui/react";
 
 interface IProps {
@@ -21,7 +20,9 @@ function SimpleModal({ title, button, children }: IProps): JSX.Element {
 
     return (
         <>
-            <Button onClick={onOpen}>{button}</Button>
+            <Button size="xs" rounded={2} onClick={onOpen}>
+                {button}
+            </Button>
             <Modal isCentered size="lg" isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -30,12 +31,6 @@ function SimpleModal({ title, button, children }: IProps): JSX.Element {
                     <ModalBody w="full" display="flex" flexDirection="column">
                         {children}
                     </ModalBody>
-
-                    <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={onClose}>
-                            Close
-                        </Button>
-                    </ModalFooter>
                 </ModalContent>
             </Modal>
         </>

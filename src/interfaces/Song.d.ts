@@ -1,8 +1,14 @@
 type Song = {
     id: string;
     link: string;
-    duration: number;
-    title: string | null;
+    title: string;
+    duration: string;
+    album: Album;
+    artistId: string;
+    updated_at: string;
+    userId: string | null;
+    albumId: string;
+    artist: Artist;
 };
 
 interface IPlayer {

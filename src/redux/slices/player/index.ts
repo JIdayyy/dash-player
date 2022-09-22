@@ -1,5 +1,5 @@
 import getAllSongs from "@redux/thunk/songs";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: IPlayer = {
     songs: [],
@@ -15,6 +15,21 @@ const counterSlice = createSlice({
     name: "player",
     initialState,
     reducers: {
+        removeSong: (state, action: PayloadAction<string>) => {
+            const index = state.songs.findIndex(
+                (song) => song.id === action.payload,
+            );
+            state.songs.splice(index, 1);
+        },
+        addSong(state, action: PayloadAction<Song>) {
+            state.songs.push(action.payload);
+        },
+        updateSong(state, action: PayloadAction<Song>) {
+            const index = state.songs.findIndex(
+                (song) => song.id === action.payload.id,
+            );
+            state.songs[index] = action.payload;
+        },
         setSongDuration: (state, action) => {
             state.duration = action.payload;
         },
@@ -56,6 +71,8 @@ const counterSlice = createSlice({
 });
 
 export const {
+    updateSong,
+    addSong,
     setNextSongIndex,
     setSongDuration,
     setSelectedSong,
@@ -64,6 +81,7 @@ export const {
     setShowPlaylist,
     setIsOnPause,
     setIsOnPlay,
+    removeSong,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

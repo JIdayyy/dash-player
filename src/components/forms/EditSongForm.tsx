@@ -1,6 +1,6 @@
 import { Button, Flex, Input, VStack } from "@chakra-ui/react";
+import { updateSong } from "@redux/slices/player";
 import { useAppDispatch } from "@redux/store";
-import getAllSongs from "@redux/thunk/songs";
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
@@ -10,10 +10,10 @@ export default function EditSongForm({ song }: { song: Song }): JSX.Element {
     const { register, handleSubmit, setValue } = useForm();
     const dispatch = useAppDispatch();
     const { mutateAsync } = useMutation(
-        (data: Song) => songFetcher.update(song.id, data),
+        (data: Partial<Song>) => songFetcher.update(song.id, data),
         {
-            onSuccess() {
-                dispatch(getAllSongs());
+            onSuccess(data) {
+                dispatch(updateSong(data));
             },
         },
     );
@@ -45,7 +45,11 @@ export default function EditSongForm({ song }: { song: Song }): JSX.Element {
                 <Input {...register("title")} />
                 <Input {...register("link")} />
                 <Input {...register("duration")} />
-                <Button onClick={handleSubmit(onSubmit)}>Confirm edit</Button>
+                <Flex w="full" justifyContent="flex-end">
+                    <Button onClick={handleSubmit(onSubmit)}>
+                        Confirm edit
+                    </Button>
+                </Flex>
             </VStack>
         </Flex>
     );

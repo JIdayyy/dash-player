@@ -1,6 +1,6 @@
 import { Flex, HStack, Switch, Text, useColorMode } from "@chakra-ui/react";
 import MainLayout from "@components/Layout/MainLayout";
-import { NextPageWithLayout } from "./_app";
+import { ReactNode } from "react";
 
 export default function Settings(): JSX.Element {
     const { toggleColorMode, colorMode } = useColorMode();
@@ -17,6 +17,4 @@ export default function Settings(): JSX.Element {
     );
 }
 
-Settings.getLayout = (page: NextPageWithLayout) => (
-    <MainLayout>{page}</MainLayout>
-);
+Settings.getLayout = (page: ReactNode) => <MainLayout>{page}</MainLayout>;

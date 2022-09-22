@@ -9,3 +9,5 @@ const Manage = (): ReactNode => {
 Manage.getLayout = function getLayout(page: ReactElement) {
     return <MainLayout>{page}</MainLayout>;
 };
+
+export default Manage;

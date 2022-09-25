@@ -11,6 +11,9 @@ export default function BreadScrumbs(): JSX.Element {
 
     return (
         <Breadcrumb>
+            <BreadcrumbItem>
+                <BreadcrumbLink href={`/`}>{"HOME"}</BreadcrumbLink>
+            </BreadcrumbItem>
             {getBreadScrumbs.map((item, index) => (
                 <BreadcrumbItem
                     key={item + index}
@@ -21,11 +24,6 @@ export default function BreadScrumbs(): JSX.Element {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             ))}
-            {getBreadScrumbs.length === 0 && (
-                <BreadcrumbItem isCurrentPage>
-                    <BreadcrumbLink href={`/`}>{"HOME"}</BreadcrumbLink>
-                </BreadcrumbItem>
-            )}
         </Breadcrumb>
     );
 }

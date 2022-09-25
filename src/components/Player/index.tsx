@@ -1,4 +1,6 @@
 import { Center, Flex, HStack, Portal, Text } from "@chakra-ui/react";
+import { useGetAllSongsQuery } from "@redux/services/songs";
+import { useAppSelector } from "@redux/store";
 import React, { useRef } from "react";
 import usePlayer from "src/hooks/usePlayer";
 import { secondsToHms } from "src/utils/secondToHMS";
@@ -11,14 +13,20 @@ import SongTitle from "./SongTitle";
 
 export default function Player(): JSX.Element {
     const audioRef = useRef<HTMLAudioElement>(null);
-    const {
-        selectedSong,
-        duration,
-        position,
-        dispatchSetIsOnPlay,
-        dispatchSetIsOnPause,
-        isPlaying,
-    } = usePlayer(audioRef);
+    const duration = useAppSelector(
+        (state) => state.rootReducer.player.duration,
+    );
+    const position = useAppSelector(
+        (state) => state.rootReducer.player.position,
+    );
+    const selectedSong = useAppSelector(
+        (state) => state.rootReducer.player.selectedSong,
+    );
+    const isPlaying = useAppSelector(
+        (state) => state.rootReducer.player.isPlaying,
+    );
+
+    const { dispatchSetIsOnPlay, dispatchSetIsOnPause } = usePlayer(audioRef);
 
     return (
         <Portal>
@@ -26,11 +34,11 @@ export default function Player(): JSX.Element {
                 border="2px solid gray"
                 shadow="md"
                 overflow="hidden"
-                _light={{ bg: "white" }}
-                _dark={{ bgGradient: "linear(to-br, gray.700, gray.500)" }}
                 rounded="md"
                 zIndex="modal"
-                position="absolute"
+                _light={{ bg: "white" }}
+                _dark={{ bgGradient: "linear(to-br, gray.700, gray.500)" }}
+                position="fixed"
                 bottom={10}
                 right={10}
                 direction="column"

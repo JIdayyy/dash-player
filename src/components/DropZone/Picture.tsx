@@ -1,40 +1,48 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Button, Flex, Icon, Progress, useToast } from "@chakra-ui/react";
-import { addSong } from "@redux/slices/player";
+import { useToast, Flex, Icon, Progress, Button } from "@chakra-ui/react";
+import { updateAlbum } from "@redux/slices/manage";
 import { useAppDispatch } from "@redux/store";
 import axios, { CancelTokenSource } from "axios";
-import { useCallback, useState } from "react";
+import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import axiosInstance from "src/utils/axiosInstance";
 
-function MyDropzone(): JSX.Element {
+interface IProps {
+    albumId: string;
+}
+
+export default function PictureUpload({ albumId }: IProps): JSX.Element {
     const [progress, setProgress] = useState(0);
-    const dispatch = useAppDispatch();
     const [canceler, setCanceler] = useState<{
         source: CancelTokenSource | null;
     }>({
         source: null,
     });
     const toast = useToast();
+    const dispatch = useAppDispatch();
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         const source = axios.CancelToken.source();
         const formData = new FormData();
         formData.append("file", acceptedFiles[0]);
         try {
-            const result = await axiosInstance.post("/songs", formData, {
-                cancelToken: source.token,
-                onUploadProgress: (p) => {
-                    if (!canceler.source) {
-                        setCanceler({ source });
-                    }
-                    setProgress((p.loaded / p.total) * 100);
+            const result = await axiosInstance.post(
+                `/albums/${albumId}/picture`,
+                formData,
+                {
+                    cancelToken: source.token,
+                    onUploadProgress: (p) => {
+                        if (!canceler.source) {
+                            setCanceler({ source });
+                        }
+                        setProgress((p.loaded / p.total) * 100);
+                    },
+                    headers: {
+                        "Content-type": "multipart/form-data",
+                    },
                 },
-                headers: {
-                    "Content-type": "audio/mp3",
-                },
-            });
+            );
 
             if (result) {
                 toast({
@@ -42,7 +50,7 @@ function MyDropzone(): JSX.Element {
                     description: "Upload successfull",
                     status: "success",
                 });
-                dispatch(addSong(result.data));
+                dispatch(updateAlbum(result.data));
                 setProgress(0);
             }
         } catch (thrown) {
@@ -72,8 +80,8 @@ function MyDropzone(): JSX.Element {
                 cursor="pointer"
                 direction="column"
                 w="full"
-                h="400px"
-                border="2px dotted black"
+                h="200px"
+                border="2px dotted gray"
                 rounded="md"
                 justifyContent="center"
                 alignItems="center"
@@ -89,9 +97,9 @@ function MyDropzone(): JSX.Element {
                 )}
                 <Icon
                     color="gray.500"
-                    my={10}
-                    width={200}
-                    height={200}
+                    my={5}
+                    width={100}
+                    height={100}
                     as={MdOutlineCloudUpload}
                 />
             </Flex>
@@ -127,5 +135,3 @@ function MyDropzone(): JSX.Element {
         </Flex>
     );
 }
-
-export default MyDropzone;

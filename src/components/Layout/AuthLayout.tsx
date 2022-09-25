@@ -25,13 +25,13 @@ export default function AuthLayout({ children }: IProps): JSX.Element {
         dispatch(authMeThunk());
     }, []);
 
-    // if (loading)
-    //     return (
-    //         <Center w="100vw" h="100vh">
-    //             <Spinner />
-    //         </Center>
-    //     );
-
+    if (loading && !isAuth) {
+        return (
+            <Center w="100vw" h="100vh">
+                <Spinner />
+            </Center>
+        );
+    }
     return (
         <Box w="full" h="full">
             {children}

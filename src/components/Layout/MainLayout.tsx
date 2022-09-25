@@ -6,8 +6,8 @@ import {
     DrawerOverlay,
     DrawerContent,
     IconButton,
-    Spinner,
     Center,
+    Text,
 } from "@chakra-ui/react";
 import React, { ReactNode, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
@@ -16,6 +16,8 @@ import socket from "@services/socket";
 import BreadScrumbs from "@components/breadscrumbs";
 import { useAppSelector } from "@redux/store";
 import Sidebar from "./Sidebar";
+import Player from "@components/Player";
+import AudioContextProvider from "src/context/audioContext";
 
 interface IProps {
     children: ReactNode;
@@ -23,7 +25,7 @@ interface IProps {
 
 export default function MainLayout({ children }: IProps): JSX.Element {
     const sidebar = useDisclosure();
-    const { isAuth } = useAppSelector((state) => state.rootReducer.user);
+    const isAuth = useAppSelector((state) => state.rootReducer.user.isAuth);
     const router = useRouter();
 
     useEffect(() => {
@@ -41,7 +43,7 @@ export default function MainLayout({ children }: IProps): JSX.Element {
     if (!isAuth)
         return (
             <Center w="full" h="full">
-                <Spinner />
+                <Text>Unauthenticated</Text>
             </Center>
         );
 
@@ -95,23 +97,11 @@ export default function MainLayout({ children }: IProps): JSX.Element {
                         icon={<FiMenu />}
                         size="sm"
                     />
-                    {/* <InputGroup
-                        w="96"
-                        display={{
-                            base: "none",
-                            md: "flex",
-                        }}
-                    >
-                        <InputLeftElement color="gray.500">
-                            <FiSearch />
-                        </InputLeftElement>
-                        <Input placeholder="Search for articles..." />
-                    </InputGroup> */}
+
                     <BreadScrumbs />
                 </Flex>
 
                 <Flex
-                    zIndex="sticky"
                     h="full"
                     overflowX="hidden"
                     overflowY="scroll"
@@ -121,6 +111,9 @@ export default function MainLayout({ children }: IProps): JSX.Element {
                     p="4"
                 >
                     {children}
+                    <AudioContextProvider>
+                        <Player />
+                    </AudioContextProvider>
                 </Flex>
             </Box>
         </Box>

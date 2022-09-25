@@ -1,4 +1,5 @@
-import getAllSongs from "@redux/thunk/songs";
+// import getAllSongs from "@redux/thunk/songs";
+import { songApi } from "@redux/services/songs";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: IPlayer = {
@@ -22,7 +23,9 @@ const counterSlice = createSlice({
             state.songs.splice(index, 1);
         },
         addSong(state, action: PayloadAction<Song>) {
-            state.songs.push(action.payload);
+            if (!state.songs.find((song) => song.id === action.payload.id)) {
+                state.songs.push(action.payload);
+            }
         },
         updateSong(state, action: PayloadAction<Song>) {
             const index = state.songs.findIndex(
@@ -63,10 +66,25 @@ const counterSlice = createSlice({
             }
         },
     },
-    extraReducers: {
-        [getAllSongs.fulfilled.type]: (state, action) => {
-            state.songs = action.payload;
-        },
+    extraReducers: (builder) => {
+        builder.addMatcher(
+            songApi.endpoints.getAllSongs.matchFulfilled,
+            (state, { payload }) => {
+                state.songs = payload;
+                state.selectedSong = payload[0];
+                state.duration = Math.floor(parseInt(payload[0].duration));
+                state.position = 0;
+            },
+        );
+        builder.addMatcher(
+            songApi.endpoints.deleteSong.matchFulfilled,
+            (state, { payload }) => {
+                const index = state.songs.findIndex(
+                    (song) => song.id === payload.id,
+                );
+                state.songs.splice(index, 1);
+            },
+        );
     },
 });
 

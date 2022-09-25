@@ -1,5 +1,12 @@
-import { Box, BoxProps, Flex, Icon, Text } from "@chakra-ui/react";
-import { useAppSelector } from "@redux/store";
+import {
+    Box,
+    BoxProps,
+    Flex,
+    Icon,
+    Text,
+    useColorMode,
+} from "@chakra-ui/react";
+import { useAppDispatch, useAppSelector } from "@redux/store";
 import { CustomDomComponent, motion } from "framer-motion";
 import usePlayer from "src/hooks/usePlayer";
 import { BsSoundwave } from "react-icons/bs";
@@ -7,13 +14,15 @@ import { BsSoundwave } from "react-icons/bs";
 interface IProps {
     song: Song;
     handleClick: (id: string) => void;
-    index: number;
 }
 
 const MotionBox: CustomDomComponent<BoxProps> = motion(Box);
 
-const PlaylistItem = ({ song, handleClick, index }: IProps) => {
-    const { selectedSong } = usePlayer();
+const PlaylistItem = ({ song, handleClick }: IProps) => {
+    const selectedSong = useAppSelector(
+        (state) => state.rootReducer.player.selectedSong,
+    );
+    const { colorMode } = useColorMode();
     return (
         <MotionBox
             display="flex"
@@ -21,14 +30,10 @@ const PlaylistItem = ({ song, handleClick, index }: IProps) => {
             alignItems="center"
             px={3}
             py={2}
-            bg={index % 2 === 0 ? "transparent" : "gray.600"}
-            whileHover={{
-                // backgroundColor: "#3e444f",
-                textDecoration: "underline",
-            }}
+            _odd={{ bg: colorMode === "light" ? "gray.100" : "gray.700" }}
+            _hover={{ textDecoration: "underline" }}
             cursor="pointer"
             onClick={() => handleClick(song.id)}
-            color="white"
             rounded="sm"
         >
             <Text>{song.title}</Text>
@@ -38,8 +43,9 @@ const PlaylistItem = ({ song, handleClick, index }: IProps) => {
 };
 
 export default function Playlist(): JSX.Element {
-    const { songs, showPlaylist } = useAppSelector(
-        (state) => state.rootReducer.player,
+    const songs = useAppSelector((state) => state.rootReducer.player.songs);
+    const showPlaylist = useAppSelector(
+        (state) => state.rootReducer.player.showPlaylist,
     );
     const { handleSelectSong } = usePlayer();
 
@@ -53,9 +59,8 @@ export default function Playlist(): JSX.Element {
                     p={1}
                     direction="column"
                 >
-                    {songs.map((song, index) => (
+                    {songs.map((song) => (
                         <PlaylistItem
-                            index={index}
                             key={song.id}
                             song={song}
                             handleClick={() => handleSelectSong(song.id)}

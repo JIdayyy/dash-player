@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 
 const songFetcher = {
     update: async (id: string, data: Partial<Song>): Promise<Song> =>

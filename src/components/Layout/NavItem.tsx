@@ -21,11 +21,15 @@ const NavItem = ({
     const router = useRouter();
     const color = useColorModeValue("gray.600", "gray.300");
 
-    const handleClick = () => router.push(`/${href}`);
-
+    const handleClick = () => {
+        if (onClick) {
+            return onClick();
+        }
+        router.push(href);
+    };
     return (
         <Flex
-            onClick={onClick || handleClick}
+            onClick={handleClick}
             align="center"
             px="4"
             pl={isChild ? "12" : "4"}

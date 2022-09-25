@@ -1,3 +1,4 @@
+import { useGetAllSongsQuery } from "@redux/services/songs";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useDispatch } from "react-redux";
 import {
@@ -7,7 +8,6 @@ import {
     setNextSongIndex,
     setSelectedSong,
     setShowPlaylist,
-    setSongDuration,
     setSongPosition,
 } from "@redux/slices/player";
 import { useAppSelector } from "@redux/store";
@@ -15,16 +15,26 @@ import { useEffect } from "react";
 
 const usePlayer = (ref?: React.RefObject<HTMLAudioElement>) => {
     const dispatch = useDispatch();
+    const { data: songs = [] } = useGetAllSongsQuery();
 
-    const {
-        songs,
-        duration,
-        selectedSong,
-        position,
-        showPlaylist,
-        isPlaying,
-        songIndex,
-    } = useAppSelector((state) => state.rootReducer.player);
+    const duration = useAppSelector(
+        (state) => state.rootReducer.player.duration,
+    );
+    const position = useAppSelector(
+        (state) => state.rootReducer.player.position,
+    );
+    const selectedSong = useAppSelector(
+        (state) => state.rootReducer.player.selectedSong,
+    );
+    const showPlaylist = useAppSelector(
+        (state) => state.rootReducer.player.showPlaylist,
+    );
+    const isPlaying = useAppSelector(
+        (state) => state.rootReducer.player.isPlaying,
+    );
+    const songIndex = useAppSelector(
+        (state) => state.rootReducer.player.songIndex,
+    );
 
     const dispatchSetDuration = (dur: number) => {
         dispatch(setDuration(dur));
@@ -46,9 +56,6 @@ const usePlayer = (ref?: React.RefObject<HTMLAudioElement>) => {
     };
 
     const handleSelectSong = (id: string) => {
-        if (ref) {
-            dispatch(setSongDuration(ref.current?.duration));
-        }
         dispatch(setSelectedSong(id));
     };
 
@@ -85,7 +92,7 @@ const usePlayer = (ref?: React.RefObject<HTMLAudioElement>) => {
         ) {
             ref?.current?.pause();
             dispatch(setNextSongIndex());
-            play();
+            ref?.current?.play();
         }
     }, [isPlaying]);
 

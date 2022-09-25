@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import React, { ReactElement, ReactNode } from "react";
+import "nprogress/nprogress.css";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "@definitions/chakra/theme";
@@ -11,8 +12,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { Provider } from "react-redux";
 import store from "@redux/store";
-import getAllSongs from "@redux/thunk/songs";
 import { NextPage } from "next";
+import Router from "next/router";
+import NProgress from "nprogress";
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -27,9 +29,23 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     const apolloClient = initializeApollo();
     const queryClient = new QueryClient();
 
-    store.dispatch(getAllSongs());
-
     const getLayout = Component.getLayout || ((page) => page);
+
+    useEffect(() => {
+        const handleRouteStart = () => NProgress.start();
+        const handleRouteDone = () => NProgress.done();
+
+        Router.events.on("routeChangeStart", handleRouteStart);
+        Router.events.on("routeChangeComplete", handleRouteDone);
+        Router.events.on("routeChangeError", handleRouteDone);
+
+        return () => {
+            // Make sure to remove the event handler on unmount!
+            Router.events.off("routeChangeStart", handleRouteStart);
+            Router.events.off("routeChangeComplete", handleRouteDone);
+            Router.events.off("routeChangeError", handleRouteDone);
+        };
+    }, []);
 
     return (
         <ChakraProvider theme={theme}>

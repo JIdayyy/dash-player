@@ -1,13 +1,13 @@
 import React, { ReactElement } from "react";
 import MainLayout from "@components/Layout/MainLayout";
-import { Text } from "@chakra-ui/react";
-import Player from "@components/Player";
+import AudioContextProvider from "src/context/audioContext";
+import CardList from "@components/CardList";
 
 const Home = (): JSX.Element => {
     return (
-        <Text>
-            <Player />
-        </Text>
+        <AudioContextProvider>
+            <CardList />
+        </AudioContextProvider>
     );
 };
 

@@ -1,10 +1,15 @@
 import { Button, Icon } from "@chakra-ui/react";
+import { useAppSelector } from "@redux/store";
 import React from "react";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import usePlayer from "src/hooks/usePlayer";
 
 export default function PlaylistToggle(): JSX.Element {
-    const { toggleShowPlaylist, showPlaylist } = usePlayer();
+    const { toggleShowPlaylist } = usePlayer();
+    const showPlaylist = useAppSelector(
+        (state) => state.rootReducer.player.showPlaylist,
+    );
+
     return (
         <>
             {showPlaylist ? (

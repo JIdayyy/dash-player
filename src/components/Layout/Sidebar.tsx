@@ -20,11 +20,12 @@ import {
 import NavItem from "./NavItem";
 import { signOutThunk } from "@redux/thunk/auth";
 import { useAppDispatch } from "@redux/store";
-import Link from "next/link";
+import { usePrefetch } from "@redux/services/songs";
 
 export default function SideBar(props: BoxProps): JSX.Element {
     const dispatch = useAppDispatch();
     const integrations = useDisclosure();
+    const prefetch = usePrefetch("getAllAlbums");
 
     return (
         <Box
@@ -86,7 +87,14 @@ export default function SideBar(props: BoxProps): JSX.Element {
                     <NavItem isChild href="/manage/songs" icon={GiSoundWaves}>
                         Songs
                     </NavItem>
-                    <NavItem isChild href="/manage/albums" icon={MdAlbum}>
+                    <NavItem
+                        onHover={() =>
+                            prefetch({ artist: true, count: "songs" })
+                        }
+                        isChild
+                        href="/manage/albums"
+                        icon={MdAlbum}
+                    >
                         Albums
                     </NavItem>
                 </Collapse>

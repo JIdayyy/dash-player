@@ -6,7 +6,7 @@ import {
     Text,
     useColorMode,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@redux/store";
+import { useAppSelector } from "@redux/store";
 import { CustomDomComponent, motion } from "framer-motion";
 import usePlayer from "src/hooks/usePlayer";
 import { BsSoundwave } from "react-icons/bs";

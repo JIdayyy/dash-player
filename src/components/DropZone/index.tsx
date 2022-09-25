@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button, Flex, Icon, Progress, useToast } from "@chakra-ui/react";
-import { addSong } from "@redux/slices/player";
+import { songApi } from "@redux/services/songs";
 import { useAppDispatch } from "@redux/store";
 import axios, { CancelTokenSource } from "axios";
 import { useCallback, useState } from "react";
@@ -42,7 +42,7 @@ function MyDropzone(): JSX.Element {
                     description: "Upload successfull",
                     status: "success",
                 });
-                dispatch(addSong(result.data));
+                dispatch(songApi.util.invalidateTags(["Songs", "Albums"]));
                 setProgress(0);
             }
         } catch (thrown) {

@@ -1,14 +1,9 @@
 import React, { ReactElement } from "react";
 import MainLayout from "@components/Layout/MainLayout";
-import AudioContextProvider from "src/context/audioContext";
 import CardList from "@components/CardList";
 
 const Home = (): JSX.Element => {
-    return (
-        <AudioContextProvider>
-            <CardList />
-        </AudioContextProvider>
-    );
+    return <CardList />;
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {

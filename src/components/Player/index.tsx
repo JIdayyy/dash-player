@@ -1,9 +1,7 @@
-import { Center, Flex, HStack, Portal, Text } from "@chakra-ui/react";
-import { useGetAllSongsQuery } from "@redux/services/songs";
+import { Center, Flex, Portal, Text } from "@chakra-ui/react";
 import { useAppSelector } from "@redux/store";
 import React, { useRef } from "react";
 import usePlayer from "src/hooks/usePlayer";
-import { secondsToHms } from "src/utils/secondToHMS";
 import AlbumPicture from "./AlbumPicture";
 import Controls from "./Controls";
 import Playlist from "./Playlist";
@@ -13,12 +11,7 @@ import SongTitle from "./SongTitle";
 
 export default function Player(): JSX.Element {
     const audioRef = useRef<HTMLAudioElement>(null);
-    const duration = useAppSelector(
-        (state) => state.rootReducer.player.duration,
-    );
-    const position = useAppSelector(
-        (state) => state.rootReducer.player.position,
-    );
+
     const selectedSong = useAppSelector(
         (state) => state.rootReducer.player.selectedSong,
     );
@@ -68,20 +61,7 @@ export default function Player(): JSX.Element {
 
                     <PlaylistToggle />
                 </Flex>
-                <HStack
-                    p={4}
-                    display="flex"
-                    w="full"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                >
-                    <Text>{secondsToHms(position) || "00:00"}</Text>
-                    <SliderSongPosition audioRef={audioRef} />
-                    <Text>
-                        {duration > 0 ? secondsToHms(duration) : "00:00"}
-                    </Text>
-                </HStack>
+                <SliderSongPosition audioRef={audioRef} />
                 <Controls playerRef={audioRef} />
                 <Center my={4}>
                     <Text fontSize="small" fontWeight="bold">

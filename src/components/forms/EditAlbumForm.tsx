@@ -7,36 +7,21 @@ import {
     Input,
     VStack,
 } from "@chakra-ui/react";
-import { useAppDispatch } from "@redux/store";
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import albumFetcher from "@services/fetcher/album";
 import PictureUpload from "@components/DropZone/Picture";
 import Image from "next/image";
-import {
-    useLazyGetAllSongsQuery,
-    useUpdateAlbumMutation,
-} from "@redux/services/songs";
+import { useUpdateAlbumMutation } from "@redux/services/songs";
 
 export default function EditAlbum({ album }: { album: Album }): JSX.Element {
-    const [getAllSongs] = useLazyGetAllSongsQuery();
     const {
         register,
         handleSubmit,
         setValue,
         formState: { errors },
     } = useForm();
-    const [mutate] = useUpdateAlbumMutation();
-    const { mutateAsync } = useMutation(
-        (data: Partial<Album>) => albumFetcher.update(album.id, data),
-        {
-            onSuccess(data) {
-                getAllSongs();
-                // mutate();
-            },
-        },
-    );
+
+    const [updateAlbum] = useUpdateAlbumMutation();
 
     useEffect(() => {
         setValue("title", album.title);
@@ -49,10 +34,11 @@ export default function EditAlbum({ album }: { album: Album }): JSX.Element {
     }, [album]);
 
     const onSubmit = (data: FieldValues) => {
-        mutateAsync({
+        updateAlbum({
             id: album.id,
             title: data.title,
             picture: data.picture,
+            artistId: album.artistId,
         });
     };
 

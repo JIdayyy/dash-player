@@ -1,11 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { url } from "inspector";
 
-const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-
-// Define a service using a base URL and expected endpoints
 export const songApi = createApi({
     reducerPath: "songsApi",
     tagTypes: ["Songs", "Albums", "Artists"],
@@ -29,13 +24,43 @@ export const songApi = createApi({
     endpoints: (builder) => ({
         getAllSongs: builder.query<Song[], void>({
             query: () => `/songs`,
-            providesTags: ["Songs"],
+            providesTags: [{ type: "Songs", id: "LIST" }],
         }),
         getSongById: builder.query<Song, string>({
             query: (id) => `/songs/${id}`,
         }),
-        getAllAlbums: builder.query<Album[], void>({
-            query: () => `/albums`,
+        deleteSong: builder.mutation<{ message: string; id: string }, string>({
+            query: (id) => ({
+                url: `/songs/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: [
+                { type: "Songs", id: "LIST" },
+                {
+                    type: "Albums",
+                    id: "LIST",
+                },
+            ],
+        }),
+        updateSong: builder.mutation<Song, Song>({
+            query: (song) => ({
+                url: `/songs/${song.id}`,
+                method: "PUT",
+                body: song,
+            }),
+            invalidatesTags: [{ type: "Songs", id: "LIST" }],
+        }),
+
+        getAllAlbums: builder.query<Album[], { count: string; artist: true }>({
+            query: (args) => ({
+                url: "/albums",
+                method: "GET",
+                params: {
+                    count: args.count,
+                    artist: args.artist,
+                },
+            }),
+            providesTags: [{ type: "Albums", id: "LIST" }],
         }),
         getAlbumById: builder.query<Album, string>({
             query: (id) => `/albums/${id}`,
@@ -46,25 +71,13 @@ export const songApi = createApi({
         getArtistById: builder.query<Song["artist"], string>({
             query: (id) => `/artists/${id}`,
         }),
-        deleteSong: builder.mutation<{ message: string; id: string }, string>({
-            query: (id) => ({
-                url: `/songs/${id}`,
-                method: "DELETE",
-            }),
-            invalidatesTags: ["Songs"],
-        }),
+
         deleteAlbum: builder.mutation<{ message: string; id: string }, string>({
             query: (id) => ({
                 url: `/albums/${id}`,
                 method: "DELETE",
             }),
-        }),
-        updateSong: builder.mutation<Song, Song>({
-            query: (song) => ({
-                url: `/songs/${song.id}`,
-                method: "PUT",
-                body: song,
-            }),
+            invalidatesTags: [{ type: "Albums", id: "LIST" }],
         }),
         updateAlbum: builder.mutation<Album, Album>({
             query: (album) => ({
@@ -72,6 +85,10 @@ export const songApi = createApi({
                 method: "PUT",
                 body: album,
             }),
+            invalidatesTags: [
+                { type: "Albums", id: "LIST" },
+                { type: "Songs", id: "LIST" },
+            ],
         }),
     }),
 });

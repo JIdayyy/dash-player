@@ -2,12 +2,8 @@ import { Tr, Td, Icon, Spinner, Text, useColorMode } from "@chakra-ui/react";
 import EditSongForm from "@components/forms/EditSongForm";
 import AlertDialogModal from "@components/Modals/AlertDialog";
 import SimpleModal from "@components/Modals/SimpleModal";
-import { removeSong } from "@redux/slices/player";
-import { useAppDispatch } from "@redux/store";
 import React from "react";
 import { FaRegEdit } from "react-icons/fa";
-import { useMutation } from "react-query";
-import songFetcher from "@services/fetcher/song";
 import Link from "next/link";
 import { useDeleteSongMutation } from "@redux/services/songs";
 
@@ -16,17 +12,9 @@ type Props = {
 };
 
 export default function TableItem({ song }: Props): JSX.Element {
-    const dispatch = useAppDispatch();
     const { colorMode } = useColorMode();
-    const { mutate, isLoading } = useMutation(
-        (id: string) => songFetcher.delete(id),
-        {
-            onSuccess: (data) => {
-                dispatch(removeSong(data.id));
-            },
-        },
-    );
-    const [deleteSong] = useDeleteSongMutation();
+
+    const [deleteSong, { isLoading }] = useDeleteSongMutation();
 
     return (
         <Tr

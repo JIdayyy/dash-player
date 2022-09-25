@@ -1,13 +1,7 @@
-import {
-    Flex,
-    Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
-} from "@chakra-ui/react";
+import { Flex, HStack, Text } from "@chakra-ui/react";
 import { useAppSelector } from "@redux/store";
-import { RefObject, useEffect } from "react";
-import usePlayer from "src/hooks/usePlayer";
+import { RefObject, useEffect, useState } from "react";
+import { secondsToHms } from "src/utils/secondToHMS";
 import SongTrackSlider from "./Slider";
 
 export default function SliderSongPosition({
@@ -15,20 +9,15 @@ export default function SliderSongPosition({
 }: {
     audioRef: RefObject<HTMLAudioElement>;
 }): JSX.Element {
-    const { dispatchSongPosition, dispatchSetDuration } = usePlayer(audioRef);
-    const position = useAppSelector(
-        (state) => state.rootReducer.player.position,
-    );
-    const duration = useAppSelector(
-        (state) => state.rootReducer.player.duration,
-    );
+    const [position, setPosition] = useState(0);
+    const [duration, setDuration] = useState(0);
     const { isPlaying } = useAppSelector((state) => state.rootReducer.player);
 
     useEffect(() => {
         const timer = window.setInterval(() => {
             if (audioRef && isPlaying) {
-                dispatchSongPosition(audioRef?.current?.currentTime || 0);
-                dispatchSetDuration(
+                setPosition(audioRef?.current?.currentTime || 0);
+                setDuration(
                     Math.floor(audioRef.current?.duration as number) || 0,
                 );
             }
@@ -38,20 +27,24 @@ export default function SliderSongPosition({
         };
     }, [audioRef, isPlaying]);
 
-    useEffect(() => {
-        dispatchSetDuration(
-            Math.floor(audioRef.current?.duration as number) || 0,
-        );
-        dispatchSongPosition(Math.floor(audioRef?.current?.currentTime) || 0);
-    }, []);
-
     return (
-        <Flex w="full">
-            <SongTrackSlider
-                position={position}
-                duration={duration}
-                audioRef={audioRef}
-            />
-        </Flex>
+        <HStack
+            p={4}
+            display="flex"
+            w="full"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+        >
+            <Text>{secondsToHms(position) || "00:00"}</Text>
+            <Flex w="full">
+                <SongTrackSlider
+                    position={position}
+                    duration={duration}
+                    audioRef={audioRef}
+                />
+            </Flex>
+            <Text>{duration > 0 ? secondsToHms(duration) : "00:00"}</Text>
+        </HStack>
     );
 }

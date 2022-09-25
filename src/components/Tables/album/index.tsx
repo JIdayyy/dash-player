@@ -1,16 +1,14 @@
 import { Table, Thead, Tbody, Tr, Th, TableContainer } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "@redux/store";
-import { getAllAlbumsWithSongCountAndArtistThunk } from "@redux/thunk/manage";
-import { useEffect } from "react";
+import { useGetAllAlbumsQuery } from "@redux/services/songs";
 import TableItem from "./TableItem";
 
 export default function AlbumTable(): JSX.Element {
-    const { albums } = useAppSelector((state) => state.rootReducer.manage);
-    const dispatch = useAppDispatch();
+    const { data: albums = [], isLoading } = useGetAllAlbumsQuery({
+        artist: true,
+        count: "songs",
+    });
 
-    useEffect(() => {
-        dispatch(getAllAlbumsWithSongCountAndArtistThunk());
-    }, []);
+    console.log("albums", isLoading);
 
     return (
         <TableContainer w="full" h="full">

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 
 export const signInThunk = createAsyncThunk(
@@ -77,7 +79,9 @@ export const authMeThunk = createAsyncThunk(
             }
             return rejectWithValue(data);
         } catch (error) {
-            return rejectWithValue(error.response.data.message);
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(error!.response!.data.message);
+            }
         }
     },
 );

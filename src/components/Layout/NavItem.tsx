@@ -6,6 +6,7 @@ import { IconType } from "react-icons";
 interface IProps {
     isChild?: boolean;
     onClick?: () => void;
+    onHover?: () => void;
     icon: IconType;
     children: ReactNode;
     href?: string;
@@ -16,6 +17,7 @@ const NavItem = ({
     onClick,
     icon,
     children,
+    onHover,
     href = "",
 }: IProps): JSX.Element => {
     const router = useRouter();
@@ -23,12 +25,22 @@ const NavItem = ({
 
     const handleClick = () => {
         if (onClick) {
-            return onClick();
+            onClick();
         }
-        router.push(href);
+        if (href) {
+            router.push(href);
+        }
     };
+
+    const handleHover = () => {
+        if (onHover) {
+            onHover();
+        }
+    };
+
     return (
         <Flex
+            onMouseEnter={handleHover}
             onClick={handleClick}
             align="center"
             px="4"

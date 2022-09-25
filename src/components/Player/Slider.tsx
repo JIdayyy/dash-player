@@ -4,16 +4,19 @@ import {
     SliderThumb,
     Slider,
 } from "@chakra-ui/react";
-import { setSongPosition } from "@redux/slices/player";
-import { useAppDispatch } from "@redux/store";
+
+interface IProps {
+    position: number;
+    duration: number;
+    audioRef: React.RefObject<HTMLAudioElement>;
+}
 
 export default function SongTrackSlider({
     position,
     duration,
     audioRef,
-}): JSX.Element {
-    const dispatch = useAppDispatch();
-    const handleChange = (e) => {
+}: IProps): JSX.Element {
+    const handleChange = (e: number) => {
         if (audioRef.current) {
             audioRef.current.currentTime = e;
         }
@@ -27,7 +30,7 @@ export default function SongTrackSlider({
             value={position}
             max={duration}
         >
-            <SliderTrack onChange={handleChange}>
+            <SliderTrack>
                 <SliderFilledTrack />
             </SliderTrack>
             <SliderThumb />

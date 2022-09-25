@@ -101,20 +101,22 @@ export default function MainLayout({ children }: IProps): JSX.Element {
                     <BreadScrumbs />
                 </Flex>
 
-                <Flex
-                    h="full"
-                    overflowX="hidden"
-                    overflowY="scroll"
-                    w="full"
-                    flexGrow={1}
-                    as="main"
-                    p="4"
-                >
-                    {children}
-                    <AudioContextProvider>
-                        <Player />
-                    </AudioContextProvider>
-                </Flex>
+                {isAuth && (
+                    <Flex
+                        h="full"
+                        overflowX="hidden"
+                        overflowY="scroll"
+                        w="full"
+                        flexGrow={1}
+                        as="main"
+                        p="4"
+                    >
+                        {children}
+                        <AudioContextProvider>
+                            <Player />
+                        </AudioContextProvider>
+                    </Flex>
+                )}
             </Box>
         </Box>
     );

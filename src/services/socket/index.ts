@@ -5,9 +5,16 @@ const socket = io(
 );
 import store from "@redux/store";
 import { addSong } from "@redux/slices/player";
+import { songApi } from "@redux/services/songs";
 
 socket.on("NEW_SONG", (data) => {
     store.dispatch(addSong(data));
+});
+
+socket.on("ALBUM_UPDATE", (data) => {
+    console.log("UPDATE", data);
+
+    songApi.useGetAllSongsQuery();
 });
 
 export default socket;

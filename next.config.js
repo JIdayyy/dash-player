@@ -11,7 +11,7 @@ const handler = (percentage, message, ...args) => {
 
 const nextConfig = {
     images: {
-        domains: ["minio-dc-s3.digitalcopilote.re"],
+        domains: ["minio-dc-s3.digitalcopilote.re", "minio-cloud.jidayyy.com"],
     },
     webpack: (config) => {
         config.plugins.push(new webpack.ProgressPlugin(handler));

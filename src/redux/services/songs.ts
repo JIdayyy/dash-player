@@ -13,8 +13,6 @@ export const songApi = createApi({
                     : "";
 
             if (token) {
-                console.log(token);
-
                 headers.set("authorization", `Bearer ${token}`);
             }
 

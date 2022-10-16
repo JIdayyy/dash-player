@@ -2,6 +2,7 @@
 import { useToast, Flex, Icon, Progress, Button } from "@chakra-ui/react";
 import { updateAlbum } from "@redux/slices/manage";
 import { useAppDispatch } from "@redux/store";
+import getAllSongs from "@redux/thunk/songs";
 import axios, { CancelTokenSource } from "axios";
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -51,6 +52,7 @@ export default function PictureUpload({ albumId }: IProps): JSX.Element {
                     status: "success",
                 });
                 dispatch(updateAlbum(result.data));
+                dispatch(getAllSongs());
                 setProgress(0);
             }
         } catch (thrown) {
